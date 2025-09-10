@@ -3,6 +3,7 @@ package com.example.demo;
 import com.example.demo.controller.CompanyController;
 import com.example.demo.entity.Company;
 import com.example.demo.repository.CompanyRepository;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +34,19 @@ public class CompanyControllerTest {
         companyRepository.empty();
     }
 
+    String createCompany() {
+        Gson gson = new Gson();
+        Company company = new Company(null, "Spring");
+        return gson.toJson(company);
+    }
+
     @Test
     void should_return_created_company_when_post_companies() throws Exception {
-        String requestBody = """
-                {
-                    "name": "Spring"
-                }
-                """;
+        String company = createCompany();
+
         MockHttpServletRequestBuilder request = post("/companies")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody);
+                .content(company);
 
         mockMvc.perform(request)
                 .andExpect(status().isCreated())
@@ -52,7 +56,7 @@ public class CompanyControllerTest {
 
     @Test
     void should_return_all_companies_when_no_param() throws Exception {
-        Company spring = new Company();
+        Company spring = new Company(1,"Spring");
         spring.setName("Spring");
         companyController.createCompany(spring);
 
@@ -63,7 +67,7 @@ public class CompanyControllerTest {
 
     @Test
     void should_return_company_when_get_id_found() throws Exception {
-        Company spring = new Company();
+        Company spring = new Company(1,"Spring");
         spring.setName("Spring");
         Company company = companyController.createCompany(spring);
 
@@ -77,7 +81,7 @@ public class CompanyControllerTest {
 
     @Test
     void should_return_company_when_put_with_id_found() throws Exception {
-        Company spring = new Company();
+        Company spring = new Company(1,"Spring");
         spring.setName("Spring");
         Company company = companyController.createCompany(spring);
         String requestBody = """
@@ -97,8 +101,8 @@ public class CompanyControllerTest {
 
     @Test
     void should_return_no_content_when_delete_id_found() throws Exception {
-        Company spring = new Company();
-        spring.setName("Spring");
+        Company spring = new Company(1,"Spring");
+
         Company company = companyController.createCompany(spring);
 
         MockHttpServletRequestBuilder request = delete("/companies/" + company.getId())
@@ -110,8 +114,8 @@ public class CompanyControllerTest {
 
     @Test
     void should_return_truncated_companies_when_page_size_is_limit() throws Exception {
-        Company spring = new Company();
-        spring.setName("Spring");
+        Company spring = new Company(1,"Spring");
+
         companyController.createCompany(spring);
         companyController.createCompany(spring);
         companyController.createCompany(spring);

@@ -260,12 +260,36 @@ public class EmployeeControllerTest {
     }
 
     @Test
-    void should_return_status_404_when_update_employee_with_age_below_18() throws Exception {
+    void should_return_status_404_when_create_employee_with_age_below_18() throws Exception {
         Gson gson = new Gson();
-        String json = gson.toJson(new Employee(1, "John Smith", 16, "male", 600.0));
-        mockMvc.perform(put("/employees/1")
+        String json = gson.toJson(new Employee(1, "John Smith", 16, "male", 60000.0));
+        mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void should_return_status_404_when_create_employee_with_salary_below_20000() throws Exception {
+        Gson gson = new Gson();
+        String json = gson.toJson(new Employee(1, "John Smith", 22, "male", 6000.0));
+        mockMvc.perform(post("/employees")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void should_return_status_404_when_update_employee_with_active_status_is_false() throws Exception {
+        Gson gson = new Gson();
+        String json = gson.toJson(new Employee(1, "John Smith", 18, "male", 60000.0));
+        mockMvc.perform(post("/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json));
+        mockMvc.perform(put("/employees/1"))
+                .andExpect(status().isBadRequest());
+    }
+
+
+
 }
