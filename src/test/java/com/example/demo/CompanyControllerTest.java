@@ -2,6 +2,7 @@ package com.example.demo;
 
 import com.example.demo.controller.CompanyController;
 import com.example.demo.entity.Company;
+import com.example.demo.repository.CompanyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,14 @@ public class CompanyControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
     private CompanyController companyController;
 
     @BeforeEach
     void cleanCompanies() {
-        companyController.empty();
+        companyRepository.empty();
     }
 
     @Test
