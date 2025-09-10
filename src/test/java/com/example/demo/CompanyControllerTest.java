@@ -104,11 +104,12 @@ public class CompanyControllerTest {
 
     @Test
     void should_return_no_content_when_delete_id_found() throws Exception {
-        Company spring = new Company(1,"Spring");
+        String company = createCompany();
+        mockMvc.perform(post("/companies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(company));
 
-        Company company = companyController.createCompany(spring);
-
-        MockHttpServletRequestBuilder request = delete("/companies/" + company.getId())
+        MockHttpServletRequestBuilder request = delete("/companies/1" )
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
