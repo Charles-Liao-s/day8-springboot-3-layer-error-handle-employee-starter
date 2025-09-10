@@ -29,10 +29,17 @@ public class CompanyService {
     }
 
     public Company updateCompany(int id, Company updatedCompany) {
+        companyRepository.getCompanyById(id);
+        if(updatedCompany.getName() == null || updatedCompany.getName().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Company name cannot be empty");
+        }
         return companyRepository.updateCompany(id, updatedCompany);
     }
 
     public Company getCompanyById(int id) {
+        if (companyRepository.getCompanyById(id) == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found with id: " + id);
+        }
         return companyRepository.getCompanyById(id);
     }
 

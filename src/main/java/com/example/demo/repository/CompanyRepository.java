@@ -21,7 +21,7 @@ public class CompanyRepository {
         companies.clear();
     }
 
-    public List<Company> getCompanies(Integer page,Integer size) {
+    public List<Company> getCompanies(Integer page, Integer size) {
         if (page != null && size != null) {
             int start = (page - 1) * size;
             int end = Math.min(start + size, companies.size());
@@ -40,7 +40,6 @@ public class CompanyRepository {
     }
 
     public Company updateCompany(int id, Company updatedCompany) {
-        Company found = null;
         for (Company c : companies) {
             if (c.getId().equals(id)) {
                 c.setName(updatedCompany.getName());
@@ -56,7 +55,7 @@ public class CompanyRepository {
                 return c;
             }
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found with id: " + id);
+        return null;
     }
 
     public void deleteCompany(int id) {
@@ -69,9 +68,7 @@ public class CompanyRepository {
         }
         if (found != null) {
             companies.remove(found);
-            return;
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found with id: " + id);
     }
 
 
