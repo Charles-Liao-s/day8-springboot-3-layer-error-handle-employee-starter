@@ -36,7 +36,7 @@ public class CompanyControllerTest {
 
     String createCompany() {
         Gson gson = new Gson();
-        Company company = new Company(null, "Spring");
+        Company company = new Company(1, "Spring");
         return gson.toJson(company);
     }
 
@@ -68,16 +68,17 @@ public class CompanyControllerTest {
 
     @Test
     void should_return_company_when_get_id_found() throws Exception {
-        Company spring = new Company(1,"Spring");
-        spring.setName("Spring");
-        Company company = companyController.createCompany(spring);
+        String company = createCompany();
+        mockMvc.perform(post("/companies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(company));
 
-        MockHttpServletRequestBuilder request = get("/companies/" + company.getId())
+        MockHttpServletRequestBuilder request = get("/companies/1")
                 .contentType(MediaType.APPLICATION_JSON);
         mockMvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(company.getId()))
-                .andExpect(jsonPath("$.name").value(company.getName()));
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Spring"));
     }
 
     @Test
