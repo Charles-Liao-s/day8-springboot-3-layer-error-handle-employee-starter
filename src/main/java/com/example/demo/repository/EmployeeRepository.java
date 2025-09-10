@@ -44,19 +44,6 @@ public class EmployeeRepository {
     }
 
     public Employee updateEmployee(int id, Employee updatedEmployee) {
-//        Employee found = null;
-//        for (Employee e : employees) {
-//            if (Objects.equals(e.getId(), id)) {
-//                found = e;
-//                break;
-//            }
-//        }
-//        if (found == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id);
-//        }
-//        if(!found.isActiveStatus()){
-//            throw new InvalidStatusException( "Employee is not active with id: " + id);
-//        }
         updatedEmployee.setName(updatedEmployee.getName());
         updatedEmployee.setAge(updatedEmployee.getAge());
         updatedEmployee.setGender(updatedEmployee.getGender());
@@ -65,7 +52,6 @@ public class EmployeeRepository {
     }
 
     public void deleteEmployee(int id) {
-
         Employee found = null;
         for (Employee e : employees) {
             if (e.getId() == id) {
@@ -77,7 +63,6 @@ public class EmployeeRepository {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id);
         }
         found.setActiveStatus(false);
-        //employees.remove(found);
     }
 
     public void deleteAllEmployees() {

@@ -13,9 +13,6 @@ import java.util.List;
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
-
-
-
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
@@ -35,7 +32,7 @@ public class EmployeeService {
         if (employee.getAge() < 18 || employee.getAge() > 65) {
             throw new InvalidAgeException("Employee age should be between 18 and 65");
         }
-        if (employee.getAge() > 30 || employee.getSalary() < 20000){
+        if (employee.getAge() > 30 || employee.getSalary() < 20000) {
             throw new InvalidAgeException("Employee age should be less than 30 and salary shoule be gerater than 20000");
         }
         return employeeRepository.createEmployee(employee);
@@ -46,7 +43,7 @@ public class EmployeeService {
         if (existingEmployee == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Updated employee cannot be null");
         }
-        if(!existingEmployee.isActiveStatus()){
+        if (!existingEmployee.isActiveStatus()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee is not active with id: " + id);
         }
         return employeeRepository.updateEmployee(id, updatedEmployee);
@@ -54,10 +51,10 @@ public class EmployeeService {
 
     public void deleteEmployee(int id) {
         Employee employee = getEmployeeById(id);
-        if(employee == null){
+        if (employee == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id);
         }
-        if(!employee.isActiveStatus()){
+        if (!employee.isActiveStatus()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee is not active with id: " + id);
         }
         employee.setActiveStatus(false);
