@@ -258,4 +258,14 @@ public class EmployeeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.activeStatus").value(true));
     }
+
+    @Test
+    void should_return_status_404_when_update_employee_with_age_below_18() throws Exception {
+        Gson gson = new Gson();
+        String json = gson.toJson(new Employee(1, "John Smith", 16, "male", 600.0));
+        mockMvc.perform(put("/employees/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isNotFound());
+    }
 }
