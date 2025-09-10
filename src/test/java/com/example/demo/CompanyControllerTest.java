@@ -92,7 +92,7 @@ public class CompanyControllerTest {
                     "name": "Spring2"
                 }
                 """;
-        MockHttpServletRequestBuilder request = put("/companies/1" )
+        MockHttpServletRequestBuilder request = put("/companies/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody);
 
@@ -109,7 +109,7 @@ public class CompanyControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(company));
 
-        MockHttpServletRequestBuilder request = delete("/companies/1" )
+        MockHttpServletRequestBuilder request = delete("/companies/1")
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
@@ -118,14 +118,13 @@ public class CompanyControllerTest {
 
     @Test
     void should_return_truncated_companies_when_page_size_is_limit() throws Exception {
-        Company spring = new Company(1,"Spring");
 
-        companyController.createCompany(spring);
-        companyController.createCompany(spring);
-        companyController.createCompany(spring);
-        companyController.createCompany(spring);
-        companyController.createCompany(spring);
-        companyController.createCompany(spring);
+        for (int i = 0; i < 12; i++) {
+            Company company = new Company(i, "Spring" + i);
+            mockMvc.perform(post("/companies")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(new Gson().toJson(company)));
+        }
         MockHttpServletRequestBuilder request = get("/companies?page=1&size=5")
                 .contentType(MediaType.APPLICATION_JSON);
 
