@@ -5,7 +5,19 @@ public class Employee {
     private String name;
     private Integer age;
     private String gender;
+
+    public Employee(Integer id, String name, Integer age, String gender, Double salary) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.salary = salary;
+    }
+
     private Double salary;
+
+
+
     public Integer getId() {
         return id;
     }
