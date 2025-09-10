@@ -5,7 +5,7 @@ public class Employee {
     private String name;
     private Integer age;
     private String gender;
-    private boolean activeStatus;
+    private boolean activeStatus = true;
 
     public Employee(Integer id, String name, Integer age, String gender, Double salary) {
         this.id = id;

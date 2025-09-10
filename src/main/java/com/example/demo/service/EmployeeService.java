@@ -14,6 +14,8 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
 
+
+
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
@@ -40,14 +42,26 @@ public class EmployeeService {
     }
 
     public Employee updateEmployee(int id, Employee updatedEmployee) {
-        if (updatedEmployee == null) {
+        Employee existingEmployee = getEmployeeById(id);
+        if (existingEmployee == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Updated employee cannot be null");
+        }
+        if(!existingEmployee.isActiveStatus()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee is not active with id: " + id);
         }
         return employeeRepository.updateEmployee(id, updatedEmployee);
     }
 
     public void deleteEmployee(int id) {
-        employeeRepository.deleteEmployee(id);
+        Employee employee = getEmployeeById(id);
+        if(employee == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id);
+        }
+        if(!employee.isActiveStatus()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee is not active with id: " + id);
+        }
+        employee.setActiveStatus(false);
+        employeeRepository.updateEmployee(id, employee);
     }
 
     public void deleteAllEmployees() {

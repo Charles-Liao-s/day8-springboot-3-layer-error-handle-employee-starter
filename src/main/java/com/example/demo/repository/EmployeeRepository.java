@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.Exception.InvalidStatusException;
 import com.example.demo.entity.Employee;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
@@ -43,24 +44,28 @@ public class EmployeeRepository {
     }
 
     public Employee updateEmployee(int id, Employee updatedEmployee) {
-        Employee found = null;
-        for (Employee e : employees) {
-            if (Objects.equals(e.getId(), id)) {
-                found = e;
-                break;
-            }
-        }
-        if (found == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id);
-        }
-        found.setName(updatedEmployee.getName());
-        found.setAge(updatedEmployee.getAge());
-        found.setGender(updatedEmployee.getGender());
-        found.setSalary(updatedEmployee.getSalary());
-        return found;
+//        Employee found = null;
+//        for (Employee e : employees) {
+//            if (Objects.equals(e.getId(), id)) {
+//                found = e;
+//                break;
+//            }
+//        }
+//        if (found == null) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id);
+//        }
+//        if(!found.isActiveStatus()){
+//            throw new InvalidStatusException( "Employee is not active with id: " + id);
+//        }
+        updatedEmployee.setName(updatedEmployee.getName());
+        updatedEmployee.setAge(updatedEmployee.getAge());
+        updatedEmployee.setGender(updatedEmployee.getGender());
+        updatedEmployee.setSalary(updatedEmployee.getSalary());
+        return updatedEmployee;
     }
 
     public void deleteEmployee(int id) {
+
         Employee found = null;
         for (Employee e : employees) {
             if (e.getId() == id) {
