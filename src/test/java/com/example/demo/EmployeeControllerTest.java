@@ -222,4 +222,40 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.activeStatus").value(true));
     }
 
+    @Test
+    void should_return_status_204_when_delete_employee_who_active_status_is_false() throws Exception {
+        Gson gson = new Gson();
+        String json = gson.toJson(new Employee(1, "John Smith", 18, "male", 60000.0));
+        mockMvc.perform(post("/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json));
+
+        mockMvc.perform(delete("/employees/1"))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/employees/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.activeStatus").value(false));
+    }
+
+    @Test
+    void should_return_status_200_when_update_employee_with_status_true() throws Exception {
+        Gson gson = new Gson();
+        String json = gson.toJson(new Employee(1, "John Smith", 18, "male", 60000.0));
+        mockMvc.perform(post("/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json));
+
+        mockMvc.perform(put("/employees/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isOk());
+
+
+        mockMvc.perform(get("/employees/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.activeStatus").value(true));
+    }
 }
