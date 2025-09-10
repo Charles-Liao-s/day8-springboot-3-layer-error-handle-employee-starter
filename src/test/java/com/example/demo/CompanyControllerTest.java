@@ -83,21 +83,22 @@ public class CompanyControllerTest {
 
     @Test
     void should_return_company_when_put_with_id_found() throws Exception {
-        Company spring = new Company(1,"Spring");
-        spring.setName("Spring");
-        Company company = companyController.createCompany(spring);
+        String company = createCompany();
+        mockMvc.perform(post("/companies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(company));
         String requestBody = """
                 {
                     "name": "Spring2"
                 }
                 """;
-        MockHttpServletRequestBuilder request = put("/companies/" + company.getId())
+        MockHttpServletRequestBuilder request = put("/companies/1" )
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody);
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(company.getId()))
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Spring2"));
     }
 
