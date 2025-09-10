@@ -37,6 +37,7 @@ public class EmployeeRepository {
 
     public Employee createEmployee(Employee employee) {
         employee.setId(employees.size() + 1);
+        employee.setActiveStatus(true);
         employees.add(employee);
         return employee;
     }

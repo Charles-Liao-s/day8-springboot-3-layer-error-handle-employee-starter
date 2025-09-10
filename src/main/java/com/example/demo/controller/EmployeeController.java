@@ -1,16 +1,12 @@
 package com.example.demo.controller;
 
+import com.example.demo.Exception.InvalidAgeException;
 import com.example.demo.entity.Employee;
-import com.example.demo.repository.EmployeeRepository;
 import com.example.demo.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/employees")
@@ -34,7 +30,7 @@ public class EmployeeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Employee createEmployee(@RequestBody Employee employee) {
+    public Employee createEmployee(@RequestBody Employee employee) throws InvalidAgeException {
         return employeeService.createEmployee(employee);
     }
 
