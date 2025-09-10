@@ -30,8 +30,8 @@ public class CompanyControllerTest {
     private CompanyController companyController;
 
     @BeforeEach
-    void cleanCompanies() {
-        companyRepository.empty();
+    void cleanCompanies() throws Exception {
+        mockMvc.perform(get("/companies/empty"));
     }
 
     String createCompany() {

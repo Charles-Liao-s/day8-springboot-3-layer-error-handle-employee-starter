@@ -17,11 +17,6 @@ import java.util.stream.Stream;
 public class CompanyRepository {
     private final List<Company> companies = new ArrayList<>();
 
-
-    public void deleteAllEmployees() {
-        companies.clear();
-    }
-
     public void empty() {
         companies.clear();
     }
