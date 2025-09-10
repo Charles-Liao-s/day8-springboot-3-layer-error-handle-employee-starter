@@ -53,4 +53,13 @@ public class EmployeeServiceTest {
 
     }
 
+    @Test
+    public void should_create_a_employee_with_default_active_status_when_create_a_employee_of() {
+        Employee employee = new Employee(null, "Jack",20, "male", 30000.0);
+        employee.setActiveStatus(true);
+        when(employeeRepository.createEmployee(employee)).thenReturn(employee);
+        Employee employeeResult = employeeService.createEmployee(employee);
+        assertEquals(employeeResult, employee);
+    }
+
 }
