@@ -56,9 +56,10 @@ public class CompanyControllerTest {
 
     @Test
     void should_return_all_companies_when_no_param() throws Exception {
-        Company spring = new Company(1,"Spring");
-        spring.setName("Spring");
-        companyController.createCompany(spring);
+        String company = createCompany();
+        mockMvc.perform(post("/companies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(company));
 
         mockMvc.perform(get("/companies").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
