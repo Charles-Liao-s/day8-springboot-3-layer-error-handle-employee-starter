@@ -34,6 +34,10 @@ public class Employee {
     public Double getSalary() {
         return salary;
     }
+    public boolean isActiveStatus() {
+        return activeStatus;
+    }
+
     public void setId(int id) {
         this.id = id;
     }

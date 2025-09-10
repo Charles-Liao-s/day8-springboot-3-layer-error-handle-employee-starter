@@ -71,7 +71,8 @@ public class EmployeeRepository {
         if (found == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id);
         }
-        employees.remove(found);
+        found.setActiveStatus(false);
+        //employees.remove(found);
     }
 
     public void deleteAllEmployees() {

@@ -13,7 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-
 @ExtendWith(SpringExtension.class)
 public class EmployeeServiceTest {
     @InjectMocks
@@ -60,6 +59,14 @@ public class EmployeeServiceTest {
         when(employeeRepository.createEmployee(employee)).thenReturn(employee);
         Employee employeeResult = employeeService.createEmployee(employee);
         assertEquals(employeeResult, employee);
+    }
+
+    @Test
+    public void should_set_active_status_to_false_when_delete_a_employee() {
+        Employee employee = new Employee(1, "John", 28, "male", 60000.0);
+        employee.setActiveStatus(false);
+        employeeService.deleteEmployee(1);
+        assertEquals(employee.isActiveStatus(), false);
     }
 
 }
