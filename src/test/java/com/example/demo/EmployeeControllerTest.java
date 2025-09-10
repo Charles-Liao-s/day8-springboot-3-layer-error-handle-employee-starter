@@ -185,7 +185,7 @@ public class EmployeeControllerTest {
     void should_status_200_and_return_paged_employee_list() throws Exception {
         Gson gson = new Gson();
         for (int i = 1; i <= 12; i++) {
-            String json = gson.toJson(new Employee((Integer) null, "Employee" + i, 20 + i, i % 2 == 0 ? "male" : "female", 5000.0 + i));
+            String json = gson.toJson(new Employee((Integer) null, "Employee" + i, 20, i % 2 == 0 ? "male" : "female", 20000.0 + i));
             mockMvc.perform(post("/employees")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json));
@@ -197,4 +197,29 @@ public class EmployeeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(5));
     }
+
+    @Test
+    void should_return_status_201_when_create_employee_where_age_is_over_30_with_salary_less_than_20000() throws Exception {
+        Gson gson = new Gson();
+        String json = gson.toJson(new Employee(1, "John Smith", 18, "male", 60000.0));
+        mockMvc.perform(post("/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json));
+
+    }
+
+    @Test
+    void should_return_status_201_when_create_employee_with_set_active_status_true() throws Exception {
+        Gson gson = new Gson();
+        String json = gson.toJson(new Employee(1, "John Smith", 18, "male", 60000.0));
+        mockMvc.perform(post("/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json));
+
+        mockMvc.perform(get("/employees/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.activeStatus").value(true));
+    }
+
 }
