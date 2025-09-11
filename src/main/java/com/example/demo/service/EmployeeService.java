@@ -2,27 +2,55 @@ package com.example.demo.service;
 
 import com.example.demo.Exception.InvalidAgeException;
 import com.example.demo.entity.Employee;
-import com.example.demo.repository.EmployeeRepository;
+import com.example.demo.repository.IEmployeeRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
-    private final EmployeeRepository employeeRepository;
+//    private final EmployeeRepository employeeRepository;
+//
+//    public EmployeeService(EmployeeRepository employeeRepository) {
+//        this.employeeRepository = employeeRepository;
+//    }
+    private final IEmployeeRepository iEmployeeRepository;
 
-    public EmployeeService(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    public EmployeeService(IEmployeeRepository iEmployeeRepository) {
+        this.iEmployeeRepository = iEmployeeRepository;
     }
 
     public List<Employee> getEmployees(String gender, Integer page, Integer size) {
-        return employeeRepository.getEmployees(gender, page, size);
+        if(gender == null) {
+            if(page == null || size == null) {
+                return iEmployeeRepository.findAll();
+            } else {
+                Pageable pageable = PageRequest.of(page - 1, size);
+                return iEmployeeRepository.findAll(pageable).toList();
+            }
+        }else{
+            if(page == null || size == null) {
+                return iEmployeeRepository.findEmployeesByGender(gender);
+            } else {
+                Pageable pageable = PageRequest.of(page - 1, size);
+                return iEmployeeRepository.findEmployeesByGender(gender, pageable);
+            }
+        }
     }
 
-    public Employee getEmployeeById(int id) {
-        return employeeRepository.getEmployeeById(id);
+    public Employee getEmployeeById(Integer id) {
+        Optional<Employee> employee = iEmployeeRepository.findById(id);
+        if(employee.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee id cannot be null");
+        }
+        return employee.get();
     }
 
     public Employee createEmployee(Employee employee) throws InvalidAgeException {
@@ -35,37 +63,33 @@ public class EmployeeService {
         if (employee.getAge() > 30 || employee.getSalary() < 20000) {
             throw new InvalidAgeException("Employee age should be less than 30 and salary shoule be gerater than 20000");
         }
-        return employeeRepository.createEmployee(employee);
+        employee.setActiveStatus(true);
+        return iEmployeeRepository.save(employee);
     }
 
     public Employee updateEmployee(int id, Employee updatedEmployee) {
-        Employee existingEmployee = getEmployeeById(id);
-        if (existingEmployee == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Updated employee cannot be null");
+        Optional<Employee> employee = iEmployeeRepository.findById(id);
+
+        if (employee.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Updated employee cannot be null");
         }
-        if (!existingEmployee.isActiveStatus()) {
+        if (!employee.get().isActiveStatus()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee is not active with id: " + id);
         }
-        return employeeRepository.updateEmployee(id, updatedEmployee);
+        updatedEmployee.setId(id);
+        return iEmployeeRepository.save(updatedEmployee);
     }
 
     public void deleteEmployee(int id) {
-        Employee employee = getEmployeeById(id);
-        if (employee == null) {
+        Optional<Employee> employee = iEmployeeRepository.findById(id);
+
+        if (employee.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id);
         }
-        if (!employee.isActiveStatus()) {
+        if (!employee.get().isActiveStatus()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee is not active with id: " + id);
         }
-        employee.setActiveStatus(false);
-        employeeRepository.updateEmployee(id, employee);
-    }
-
-    public void deleteAllEmployees() {
-        employeeRepository.deleteAllEmployees();
-    }
-
-    public void empty() {
-        employeeRepository.empty();
+        employee.get().setActiveStatus(false);
+        iEmployeeRepository.save(employee.get());
     }
 }

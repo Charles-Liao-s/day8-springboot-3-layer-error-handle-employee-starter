@@ -24,7 +24,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public Employee getEmployeeById(@PathVariable int id) {
+    public Employee getEmployeeById(@PathVariable Integer id) {
         return employeeService.getEmployeeById(id);
     }
 
@@ -45,13 +45,5 @@ public class EmployeeController {
     public void deleteEmployee(@PathVariable int id) {
         employeeService.deleteEmployee(id);
     }
-    @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAllEmployees() {
-       employeeService.deleteAllEmployees();
-    }
 
-    public void empty() {
-       employeeService.empty();
-    }
 }

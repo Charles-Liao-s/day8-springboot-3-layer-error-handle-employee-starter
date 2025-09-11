@@ -29,9 +29,9 @@ public class EmployeeRepository {
         return stream.toList();
     }
 
-    public Employee getEmployeeById(int id) {
+    public Employee getEmployeeById(Integer id) {
         return employees.stream()
-                .filter(employee -> employee.getId() == id)
+                .filter(employee -> Objects.equals(employee.getId(), id))
                 .findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id));
     }
