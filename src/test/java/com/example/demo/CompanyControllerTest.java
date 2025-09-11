@@ -29,12 +29,15 @@ public class CompanyControllerTest {
 
     @BeforeEach
     void cleanEmployees() throws Exception {
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0;");
+        jdbcTemplate.execute("TRUNCATE TABLE employee;");
         jdbcTemplate.execute("TRUNCATE TABLE company;");
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1;");
     }
 
     String createCompany() {
         Gson gson = new Gson();
-        Company company = new Company(1, "Spring");
+        Company company = new Company(null, "Spring");
         return gson.toJson(company);
     }
 
@@ -48,7 +51,6 @@ public class CompanyControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Spring"));
     }
 
@@ -74,7 +76,6 @@ public class CompanyControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
         mockMvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Spring"));
     }
 
@@ -115,7 +116,7 @@ public class CompanyControllerTest {
     void should_return_truncated_companies_when_page_size_is_limit() throws Exception {
 
         for (int i = 0; i < 12; i++) {
-            Company company = new Company(i, "Spring" + i);
+            Company company = new Company(null, "Spring" + i);
             mockMvc.perform(post("/companies")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(new Gson().toJson(company)));

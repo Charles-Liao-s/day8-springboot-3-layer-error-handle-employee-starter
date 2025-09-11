@@ -12,20 +12,13 @@ public class Company {
     private Integer id;
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "company_id")
-    private List<Employee> employees;
 
     public Company(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Company(Integer id, String name, List<Employee> employees) {
-        this.id = id;
-        this.name = name;
-        this.employees = employees;
-    }
+
 
     public Company() {
 
@@ -47,11 +40,5 @@ public class Company {
         this.name = name;
     }
 
-    public List<Employee> getEmployees() {
-        return employees;
-    }
 
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
-    }
 }
