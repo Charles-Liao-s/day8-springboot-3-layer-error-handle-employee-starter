@@ -1,6 +1,9 @@
 package com.example.demo.entity;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.*;
+
 
 @Entity
 @Table
@@ -12,7 +15,11 @@ public class Employee {
     private Integer age;
     private String gender;
     private boolean activeStatus = true;
+    @NotNull(message = "Gender cannot be null")
+    @Min(value = 0, message = "Salary must be positive number")
     private Double salary;
+
+
 
     @Column(name = "company_id")
     private Integer company_id;
