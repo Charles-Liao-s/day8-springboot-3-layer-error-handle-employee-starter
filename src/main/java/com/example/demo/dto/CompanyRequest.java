@@ -7,6 +7,11 @@ public class CompanyRequest {
     public CompanyRequest() {
     }
 
+    public CompanyRequest(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Integer getId() {
         return id;
     }

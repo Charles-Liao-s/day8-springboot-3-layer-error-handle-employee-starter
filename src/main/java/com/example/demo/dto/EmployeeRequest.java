@@ -11,6 +11,15 @@ public class EmployeeRequest {
     public EmployeeRequest() {
     }
 
+    public EmployeeRequest(Integer id, String name, Integer age, String gender, boolean activeStatus, Double salary) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.activeStatus = activeStatus;
+        this.salary = salary;
+    }
+
     public Integer getId() {
         return id;
     }
