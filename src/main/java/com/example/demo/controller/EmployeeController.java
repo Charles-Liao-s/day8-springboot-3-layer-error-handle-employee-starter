@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.Exception.InvalidAgeException;
+import com.example.demo.dto.EmployeeRequest;
 import com.example.demo.dto.EmployeeResponse;
 import com.example.demo.entity.Employee;
 import com.example.demo.mapper.EmployeeMapper;
@@ -14,6 +15,8 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+
+    private final EmployeeMapper employeeMapper = new EmployeeMapper();
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
@@ -31,13 +34,15 @@ public class EmployeeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EmployeeResponse createEmployee(@RequestBody Employee employee) throws InvalidAgeException {
+    public EmployeeResponse createEmployee(@RequestBody EmployeeRequest employeeRequest) throws InvalidAgeException {
+        Employee employee = employeeMapper.toEmployee(employeeRequest);
         return employeeService.createEmployee(employee);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EmployeeResponse updateEmployee(@PathVariable int id, @RequestBody Employee updatedEmployee) {
+    public EmployeeResponse updateEmployee(@PathVariable int id, @RequestBody EmployeeRequest employeeRequest) {
+        Employee updatedEmployee = employeeMapper.toEmployee(employeeRequest);
         return employeeService.updateEmployee(id, updatedEmployee);
     }
 
