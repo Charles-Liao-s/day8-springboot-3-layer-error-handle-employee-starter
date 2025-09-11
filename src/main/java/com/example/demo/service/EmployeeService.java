@@ -48,7 +48,7 @@ public class EmployeeService {
     public Employee getEmployeeById(Integer id) {
         Optional<Employee> employee = iEmployeeRepository.findById(id);
         if(employee.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee id cannot be null");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee id cannot be null");
         }
         return employee.get();
     }
@@ -74,7 +74,7 @@ public class EmployeeService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Updated employee cannot be null");
         }
         if (!employee.get().isActiveStatus()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee is not active with id: " + id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee is not active with id: " + id);
         }
         updatedEmployee.setId(id);
         return iEmployeeRepository.save(updatedEmployee);
@@ -87,7 +87,7 @@ public class EmployeeService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with id: " + id);
         }
         if (!employee.get().isActiveStatus()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee is not active with id: " + id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee is not active with id: " + id);
         }
         employee.get().setActiveStatus(false);
         iEmployeeRepository.save(employee.get());

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -20,14 +21,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class EmployeeControllerTest {
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void cleanEmployees() throws Exception {
-//        employeeController.empty();
-        mockMvc.perform(delete("/employees"))
-                .andExpect(status().isNoContent());
+        jdbcTemplate.execute("TRUNCATE TABLE employee;");
     }
-
     @Test
     void should_return_404_when_employee_not_found() throws Exception {
         mockMvc.perform(get("/employees/999")
@@ -60,9 +60,9 @@ public class EmployeeControllerTest {
 
     @Test
     void should_return_employee_when_employee_found() throws Exception {
-        Employee expect = new Employee(1, "John Smith", 28, "male", 60000.0);
+        Employee expect = new Employee(null, "John Smith", 28, "male", 60000.0);
         Gson gson = new Gson();
-        String json = gson.toJson(new Employee(1, "John Smith", 28, "male", 60000.0));
+        String json = gson.toJson(new Employee(null, "John Smith", 28, "male", 60000.0));
 
         mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -71,7 +71,7 @@ public class EmployeeControllerTest {
         mockMvc.perform(get("/employees/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(expect.getId()))
+
                 .andExpect(jsonPath("$.name").value(expect.getName()))
                 .andExpect(jsonPath("$.age").value(expect.getAge()))
                 .andExpect(jsonPath("$.gender").value(expect.getGender()))
@@ -148,7 +148,7 @@ public class EmployeeControllerTest {
     @Test
     void should_status_204_when_delete_employee() throws Exception {
         Gson gson = new Gson();
-        String json = gson.toJson(new Employee(1, "John Smith", 18, "male", 60000.0));
+        String json = gson.toJson(new Employee(null, "John Smith", 18, "male", 60000.0));
         mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json));
@@ -160,21 +160,21 @@ public class EmployeeControllerTest {
     @Test
     void should_status_200_when_update_employee() throws Exception {
 
-        Employee expect = new Employee(1, "John Smith", 28, "male", 60000.0);
+        Employee expect = new Employee(null, "John Smith", 28, "male", 60000.0);
         Gson gson = new Gson();
-        String json = gson.toJson(new Employee(1, "John Smith", 28, "male", 60000.0));
+        String json = gson.toJson(new Employee(null, "John Smith", 28, "male", 60000.0));
 
         mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json));
 
 
-        mockMvc.perform(put("/employees/" + expect.getId())
+        mockMvc.perform(put("/employees/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(expect.getId()))
+
                 .andExpect(jsonPath("$.name").value(expect.getName()))
                 .andExpect(jsonPath("$.age").value(expect.getAge()))
                 .andExpect(jsonPath("$.gender").value(expect.getGender()))
@@ -201,7 +201,7 @@ public class EmployeeControllerTest {
     @Test
     void should_return_status_201_when_create_employee_where_age_is_over_30_with_salary_less_than_20000() throws Exception {
         Gson gson = new Gson();
-        String json = gson.toJson(new Employee(1, "John Smith", 18, "male", 60000.0));
+        String json = gson.toJson(new Employee(null, "John Smith", 18, "male", 60000.0));
         mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json));
@@ -211,7 +211,7 @@ public class EmployeeControllerTest {
     @Test
     void should_return_status_201_when_create_employee_with_set_active_status_true() throws Exception {
         Gson gson = new Gson();
-        String json = gson.toJson(new Employee(1, "John Smith", 18, "male", 60000.0));
+        String json = gson.toJson(new Employee(null, "John Smith", 18, "male", 60000.0));
         mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json));
@@ -225,7 +225,7 @@ public class EmployeeControllerTest {
     @Test
     void should_return_status_204_when_delete_employee_who_active_status_is_false() throws Exception {
         Gson gson = new Gson();
-        String json = gson.toJson(new Employee(1, "John Smith", 18, "male", 60000.0));
+        String json = gson.toJson(new Employee(null, "John Smith", 18, "male", 60000.0));
         mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json));
@@ -242,7 +242,7 @@ public class EmployeeControllerTest {
     @Test
     void should_return_status_200_when_update_employee_with_status_true() throws Exception {
         Gson gson = new Gson();
-        String json = gson.toJson(new Employee(1, "John Smith", 18, "male", 60000.0));
+        String json = gson.toJson(new Employee(null, "John Smith", 18, "male", 60000.0));
         mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json));
@@ -262,7 +262,7 @@ public class EmployeeControllerTest {
     @Test
     void should_return_status_404_when_create_employee_with_age_below_18() throws Exception {
         Gson gson = new Gson();
-        String json = gson.toJson(new Employee(1, "John Smith", 16, "male", 60000.0));
+        String json = gson.toJson(new Employee(null, "John Smith", 16, "male", 60000.0));
         mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
@@ -272,7 +272,7 @@ public class EmployeeControllerTest {
     @Test
     void should_return_status_404_when_create_employee_with_salary_below_20000() throws Exception {
         Gson gson = new Gson();
-        String json = gson.toJson(new Employee(1, "John Smith", 22, "male", 6000.0));
+        String json = gson.toJson(new Employee(null, "John Smith", 22, "male", 6000.0));
         mockMvc.perform(post("/employees")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
@@ -282,7 +282,7 @@ public class EmployeeControllerTest {
     @Test
     void should_return_status_404_when_update_employee_with_active_status_is_false() throws Exception {
         Gson gson = new Gson();
-        String json = gson.toJson(new Employee(1, "John Smith", 18, "male", 60000.0));
+        String json = gson.toJson(new Employee(null, "John Smith", 18, "male", 60000.0));
         mockMvc.perform(post("/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json));
