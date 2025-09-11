@@ -29,8 +29,8 @@ public class EmployeeServiceTest {
     public void should_create_a_employee_when_create_a_employee() throws InvalidAgeException {
         Employee employee = new Employee(null, "John Smith", 20, "male", 60000.0);
         when(iemployeeRepository.save(employee)).thenReturn(employee);
-        Employee employeeResult = employeeService.createEmployee(employee);
-        assertEquals(employeeResult, employee);
+        employeeService.createEmployee(employee);
+        verify(iemployeeRepository).save(employee);
     }
 
     @Test
