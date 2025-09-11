@@ -10,13 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class EmployeeService {
-//    private final EmployeeRepository employeeRepository;
+    //    private final EmployeeRepository employeeRepository;
 //
 //    public EmployeeService(EmployeeRepository employeeRepository) {
 //        this.employeeRepository = employeeRepository;
@@ -28,15 +27,15 @@ public class EmployeeService {
     }
 
     public List<Employee> getEmployees(String gender, Integer page, Integer size) {
-        if(gender == null) {
-            if(page == null || size == null) {
+        if (gender == null) {
+            if (page == null || size == null) {
                 return iEmployeeRepository.findAll();
             } else {
                 Pageable pageable = PageRequest.of(page - 1, size);
                 return iEmployeeRepository.findAll(pageable).toList();
             }
-        }else{
-            if(page == null || size == null) {
+        } else {
+            if (page == null || size == null) {
                 return iEmployeeRepository.findEmployeesByGender(gender);
             } else {
                 Pageable pageable = PageRequest.of(page - 1, size);
@@ -47,7 +46,7 @@ public class EmployeeService {
 
     public Employee getEmployeeById(Integer id) {
         Optional<Employee> employee = iEmployeeRepository.findById(id);
-        if(employee.isEmpty()) {
+        if (employee.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee id cannot be null");
         }
         return employee.get();

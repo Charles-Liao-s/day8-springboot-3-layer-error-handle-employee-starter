@@ -1,12 +1,8 @@
 package com.example.demo.repository;
 
-import com.example.demo.Exception.InvalidStatusException;
 import com.example.demo.entity.Employee;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -15,7 +11,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Repository
-public class EmployeeRepository {
+public class EmployeeRepository implements IEmployeeRepositoryFinal {
     private final List<Employee> employees = new ArrayList<>();
 
     public List<Employee> getEmployees( String gender ,Integer page,Integer size) {
