@@ -1,13 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.Exception.InvalidAgeException;
+import com.example.demo.dto.EmployeeResponse;
 import com.example.demo.entity.Employee;
+import com.example.demo.mapper.EmployeeMapper;
 import com.example.demo.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
@@ -19,24 +20,24 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<Employee> getEmployees(@RequestParam(required = false) String gender, @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
+    public List<EmployeeResponse> getEmployees(@RequestParam(required = false) String gender, @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
         return employeeService.getEmployees(gender, page, size);
     }
 
     @GetMapping("/{id}")
-    public Employee getEmployeeById(@PathVariable Integer id) {
+    public EmployeeResponse getEmployeeById(@PathVariable Integer id) {
         return employeeService.getEmployeeById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Employee createEmployee(@RequestBody Employee employee) throws InvalidAgeException {
+    public EmployeeResponse createEmployee(@RequestBody Employee employee) throws InvalidAgeException {
         return employeeService.createEmployee(employee);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Employee updateEmployee(@PathVariable int id, @RequestBody Employee updatedEmployee) {
+    public EmployeeResponse updateEmployee(@PathVariable int id, @RequestBody Employee updatedEmployee) {
         return employeeService.updateEmployee(id, updatedEmployee);
     }
 

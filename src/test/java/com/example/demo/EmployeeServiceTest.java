@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.Exception.InvalidAgeException;
+import com.example.demo.dto.EmployeeResponse;
 import com.example.demo.entity.Employee;
 import com.example.demo.repository.IEmployeeRepository;
 import com.example.demo.service.EmployeeService;
@@ -61,7 +62,7 @@ public class EmployeeServiceTest {
     public void should_create_a_employee_with_default_active_status_when_create_a_employee_of() {
         Employee employee1 = new Employee(1, "Jack",20, "male", 30000.0);
         when(iemployeeRepository.save(employee1)).thenReturn(employee1);
-        Employee employeeResult = employeeService.createEmployee(employee1);
+        EmployeeResponse employeeResult = employeeService.createEmployee(employee1);
         assertTrue(employeeResult.isActiveStatus());
         verify(iemployeeRepository).save(argThat(Employee::isActiveStatus));
     }

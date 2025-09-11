@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.Exception.InvalidAgeException;
+import com.example.demo.dto.EmployeeResponse;
 import com.example.demo.entity.Employee;
+import com.example.demo.mapper.EmployeeMapper;
 import com.example.demo.repository.IEmployeeRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,37 +24,39 @@ public class EmployeeService {
 //    }
     private final IEmployeeRepository iEmployeeRepository;
 
+    private final EmployeeMapper employeeMapper = new EmployeeMapper();
+
     public EmployeeService(IEmployeeRepository iEmployeeRepository) {
         this.iEmployeeRepository = iEmployeeRepository;
     }
 
-    public List<Employee> getEmployees(String gender, Integer page, Integer size) {
+    public List<EmployeeResponse> getEmployees(String gender, Integer page, Integer size) {
         if (gender == null) {
             if (page == null || size == null) {
-                return iEmployeeRepository.findAll();
+                return employeeMapper.toEmployeeResponseList(iEmployeeRepository.findAll());
             } else {
                 Pageable pageable = PageRequest.of(page - 1, size);
-                return iEmployeeRepository.findAll(pageable).toList();
+                return employeeMapper.toEmployeeResponseList(iEmployeeRepository.findAll(pageable).toList());
             }
         } else {
             if (page == null || size == null) {
-                return iEmployeeRepository.findEmployeesByGender(gender);
+                return employeeMapper.toEmployeeResponseList(iEmployeeRepository.findEmployeesByGender(gender));
             } else {
                 Pageable pageable = PageRequest.of(page - 1, size);
-                return iEmployeeRepository.findEmployeesByGender(gender, pageable);
+                return employeeMapper.toEmployeeResponseList(iEmployeeRepository.findEmployeesByGender(gender, pageable));
             }
         }
     }
 
-    public Employee getEmployeeById(Integer id) {
+    public EmployeeResponse getEmployeeById(Integer id) {
         Optional<Employee> employee = iEmployeeRepository.findById(id);
         if (employee.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee id cannot be null");
         }
-        return employee.get();
+        return employeeMapper.toEmployeeResponse(employee.get());
     }
 
-    public Employee createEmployee(Employee employee) throws InvalidAgeException {
+    public EmployeeResponse createEmployee(Employee employee) throws InvalidAgeException {
         if (employee.getAge() == null) {
             throw new InvalidAgeException("Employee age cannot be null");
         }
@@ -63,10 +67,10 @@ public class EmployeeService {
             throw new InvalidAgeException("Employee age should be less than 30 and salary shoule be gerater than 20000");
         }
         employee.setActiveStatus(true);
-        return iEmployeeRepository.save(employee);
+        return employeeMapper.toEmployeeResponse(iEmployeeRepository.save(employee));
     }
 
-    public Employee updateEmployee(int id, Employee updatedEmployee) {
+    public EmployeeResponse updateEmployee(int id, Employee updatedEmployee) {
         Optional<Employee> employee = iEmployeeRepository.findById(id);
 
         if (employee.isEmpty()) {
@@ -76,7 +80,7 @@ public class EmployeeService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee is not active with id: " + id);
         }
         updatedEmployee.setId(id);
-        return iEmployeeRepository.save(updatedEmployee);
+        return employeeMapper.toEmployeeResponse(iEmployeeRepository.save(updatedEmployee));
     }
 
     public void deleteEmployee(int id) {

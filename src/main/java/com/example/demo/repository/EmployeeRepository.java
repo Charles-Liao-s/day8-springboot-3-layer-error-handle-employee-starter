@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Repository
-public class EmployeeRepository implements IEmployeeRepositoryFinal {
+public class EmployeeRepository {
     private final List<Employee> employees = new ArrayList<>();
 
     public List<Employee> getEmployees( String gender ,Integer page,Integer size) {
